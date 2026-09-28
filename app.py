@@ -128,7 +128,7 @@ st.title("🧮 사마귀 레이드 계산기")
 
 # 1. 파티 구성
 st.subheader("1. 파티 구성")
-party_text = st.text_input("파티 입력 (예: 비트 3 레판 2 / 스네 4 캡아 1)", value="비트 3 레판 2")
+party_text = st.text_input("파티 입력 (예: 비트 3 레판 1 / 스네 4 캡아 1)", value="비트 3 레판 1")
 
 col_p1, col_p2 = st.columns(2)
 with col_p1:
@@ -158,7 +158,6 @@ col_c1, col_c2, col_c3 = st.columns(3)
 colors = ["빨강", "노랑", "파랑"]
 weakness_bonus = {}
 energy_decrease = {}
-raw_e_pct_dict = {}
 
 for idx, col in enumerate([col_c1, col_c2, col_c3]):
     c_name = colors[idx]
@@ -166,7 +165,6 @@ for idx, col in enumerate([col_c1, col_c2, col_c3]):
         st.caption(f"**{c_name}**")
         w_pct = st.number_input(f"{c_name} 추가 피해(%)", value=0.0, key=f"w_{c_name}")
         e_pct = st.number_input(f"{c_name} 에너지 증감(%) (+:증가, -:감소)", value=0.0, key=f"e_{c_name}")
-        raw_e_pct_dict[c_name] = e_pct
         if w_pct != 0: weakness_bonus[c_name] = w_pct / 100.0
         # + 입력 시 증가(MP감소)하도록 부호 변환 (-e_pct)
         if e_pct != 0: energy_decrease[c_name] = -e_pct / 100.0
@@ -213,15 +211,9 @@ if st.button("🚀 계산하기", type="primary"):
         m2.metric("기본 딜효율 (P)", f"{total_dmg_per_mp_sum:,.2f}")
         m3.metric("게임속도 적용 딜효율", f"{effective_dps_efficiency:,.2f}")
 
-        # 4. 클리어 경계선 판정 (스많떨 ON: 9900 / OFF: 기본 8700 + 빨강 에획증 1%당 50)
+        # 4. 클리어 경계선 판정 (스많떨 ON: 9900 / OFF: 8700)
         st.markdown("### 🎯 클리어 여부 판정")
-        if energy_drop_on:
-            threshold = 9900.0
-        else:
-            red_e_pct = raw_e_pct_dict.get("빨강", 0.0)
-            # 빨강 에획증이 양수(증가)일 때 1%당 50 보너스 적용
-            red_bonus = red_e_pct * 50.0 if red_e_pct > 0 else 0.0
-            threshold = 8700.0 + red_bonus
+        threshold = 9900.0 if energy_drop_on else 8700.0
         
         if clear_judge_value < threshold:
             margin = ((threshold - clear_judge_value) / threshold) * 100
