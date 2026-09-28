@@ -232,7 +232,7 @@ st.markdown("---")
 st.markdown(
     """
     <div style="text-align: center; color: #888888; font-size: 12px; margin-top: 20px;">
-        오늘컨별로네님 바쁘신 관계로 임시 가동 중
+
         현재 에획증에 매우 큰 문제가 있습니다... 게임속도도 너무 가중치를 강하게 준것 같네요
     </div>
     """,
