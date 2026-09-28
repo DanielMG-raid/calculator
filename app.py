@@ -123,12 +123,12 @@ def calculate_party(
 # ============================
 # 3. Streamlit UI
 # ============================
-st.set_page_config(page_title="사마귀 보스 간이 계산기", page_icon="🧮")
-st.title("🧮 사마귀 레이드 간이 계산기")
+st.set_page_config(page_title="사마귀 보스 계산기", page_icon="🧮")
+st.title("🧮 사마귀 레이드 계산기")
 
 # 1. 파티 구성
 st.subheader("1. 파티 구성")
-party_text = st.text_input("파티 입력 (예: 비트 3 레판 2 / 스네 4 캡아 1)", value="비트 3 레판 2")
+party_text = st.text_input("파티 입력 (예: 비트 3 레판 1 / 스네 4 캡아 1)", value="비트 3 레판 1")
 
 # 2. 버프 및 소환석 옵션
 st.subheader("2. 버프 및 소환석 옵션")
@@ -197,18 +197,29 @@ if st.button("🚀 계산하기", type="primary"):
         m2.metric("기본 딜효율 (P)", f"{total_dmg_per_mp_sum:,.2f}")
         m3.metric("게임속도 적용 딜효율", f"{effective_dps_efficiency:,.2f}")
 
-        # 4. 클리어 경계선 판정 (기준치: 9900)
+        # 4. 클리어 경계선 판정 (스많떨 ON: 9900 / OFF: 8700)
         st.markdown("### 🎯 클리어 여부 판정")
-        if energy_drop_on:
-            threshold = 9900.0
-            if clear_judge_value < threshold:
-                margin = ((threshold - clear_judge_value) / threshold) * 100
-                st.success(f"✅ **클리어 가능!** (**{margin:.1f}%** 여유)")
-            else:
-                margin = ((clear_judge_value - threshold) / threshold) * 100
-                st.error(f"❌ **클리어 어려움** (**{margin:.1f}%** 부족)")
+        threshold = 9900.0 if energy_drop_on else 8700.0
+        
+        if clear_judge_value < threshold:
+            margin = ((threshold - clear_judge_value) / threshold) * 100
+            st.success(f"✅ **클리어 가능!** (**{margin:.1f}%** 여유)")
         else:
-            st.info("ℹ️ '스킬 에너지 많이 떨어짐 (스많떨)' 옵션이 켜져 있을 때 클리어 경계선 판정이 작동합니다.")
+            margin = ((clear_judge_value - threshold) / threshold) * 100
+            st.error(f"❌ **클리어 어려움** (**{margin:.1f}%** 부족)")
         
     except Exception as e:
         st.error(f"계산 중 오류가 발생했습니다: {e}")
+
+# ============================
+# 맨 밑 하단 옅은 문구
+# ============================
+st.markdown("---")
+st.markdown(
+    """
+    <div style="text-align: center; color: #888888; font-size: 12px; margin-top: 20px;">
+        오늘컨별로네님 바쁘신 관계로 임시 가동 중
+    </div>
+    """,
+    unsafe_allow_html=True
+)
