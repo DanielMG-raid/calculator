@@ -128,7 +128,7 @@ st.title("🧮 사마귀 레이드 계산기")
 
 # 1. 파티 구성
 st.subheader("1. 파티 구성")
-party_text = st.text_input("파티 입력 (예: 비트 3 레판 2 / 스네 4 캡아 1)", value="비트 3 레판 2")
+party_text = st.text_input("파티 입력 (예: 비트 3 레판 1 / 스네 4 캡아 1)", value="비트 3 레판 1")
 
 col_p1, col_p2 = st.columns(2)
 with col_p1:
