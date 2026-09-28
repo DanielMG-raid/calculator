@@ -128,7 +128,7 @@ st.title("🧮 사마귀 레이드 계산기")
 
 # 1. 파티 구성
 st.subheader("1. 파티 구성")
-party_text = st.text_input("파티 입력 (예: 비트 3 레판 1 / 스네 4 캡아 1)", value="비트 3 레판 1")
+party_text = st.text_input("파티 입력 (예: 비트 3 레판 2 / 스네 4 캡아 1)", value="비트 3 레판 2")
 
 # 2. 버프 및 소환석 옵션
 st.subheader("2. 버프 및 소환석 옵션")
@@ -158,9 +158,10 @@ for idx, col in enumerate([col_c1, col_c2, col_c3]):
     with col:
         st.caption(f"**{c_name}**")
         w_pct = st.number_input(f"{c_name} 추가 피해(%)", value=0.0, key=f"w_{c_name}")
-        e_pct = st.number_input(f"{c_name} 에너지 증감(%) (+:감소, -:증가)", value=0.0, key=f"e_{c_name}")
+        e_pct = st.number_input(f"{c_name} 에너지 증감(%) (+:증가, -:감소)", value=0.0, key=f"e_{c_name}")
         if w_pct != 0: weakness_bonus[c_name] = w_pct / 100.0
-        if e_pct != 0: energy_decrease[c_name] = e_pct / 100.0
+        # + 입력 시 증가(MP감소)하도록 부호 변환 (-e_pct)
+        if e_pct != 0: energy_decrease[c_name] = -e_pct / 100.0
 
 st.divider()
 
