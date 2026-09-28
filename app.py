@@ -130,15 +130,21 @@ st.title("🧮 사마귀 레이드 계산기")
 st.subheader("1. 파티 구성")
 party_text = st.text_input("파티 입력 (예: 비트 3 레판 2 / 스네 4 캡아 1)", value="비트 3 레판 2")
 
-# 2. 버프 및 소환석 옵션
-st.subheader("2. 버프 및 소환석 옵션")
+col_p1, col_p2 = st.columns(2)
+with col_p1:
+    pomegranate_on = st.checkbox("석류 (피해 증가 +30%)", value=True)
+with col_p2:
+    princess_on = st.checkbox("공주 (피해 증가 +12%)", value=True)
+
+# 2. 소환석 옵션
+st.subheader("2. 소환석 옵션")
 col1, col2 = st.columns(2)
 with col1:
     common_buff_pct = st.number_input("공통 피해 증가 (%)", value=0.0, step=1.0)
     stone_crit_pct = st.number_input("치명타 피해 증가 (%)", value=0.0, step=1.0)
 with col2:
     game_speed_pct = st.number_input("게임속도 증가 (%)", value=0.0, step=1.0)
-    energy_drop_on = st.checkbox("⚡ 스킬 에너지 많이 떨어짐 (스많떨)", value=True)
+    energy_drop_on = st.checkbox("⚡ 스킬 에너지 많이 떨어짐 (스많떨)", value=False)
 
 # 약점 색상 및 추가 옵션
 st.markdown("##### 보스 약점 및 색상별 옵션")
@@ -173,10 +179,17 @@ if st.button("🚀 계산하기", type="primary"):
     try:
         party = build_party_from_text(party_text)
         
+        # 석류(+30%), 공주(+12%) 보너스 합산
+        total_common_buff_pct = common_buff_pct
+        if pomegranate_on:
+            total_common_buff_pct += 30.0
+        if princess_on:
+            total_common_buff_pct += 12.0
+
         # 1. 파티 딜 및 딜효율(P) 계산
         total_dmg, total_dmg_per_mp_sum, total_mp = calculate_party(
             party=party,
-            common_damage_buff=common_buff_pct / 100.0,
+            common_damage_buff=total_common_buff_pct / 100.0,
             stone_crit_buff=stone_crit_pct / 100.0,
             weakness_colors=selected_weakness_colors,
             weakness_bonus_by_color=weakness_bonus,
